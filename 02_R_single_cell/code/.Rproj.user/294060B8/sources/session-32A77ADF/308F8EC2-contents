@@ -1,0 +1,84 @@
+## Generating files for GSEA analysis of the enrichment of SBC signatures in high-risk signatures
+## Creating the SBC signature by merging DEGs among SBC cells vs. remainder basal common to both ACI&SD
+## Author: Simona Cristea
+## Date: October 2022
+## Publication: Breast cancer prevention by short-term inhibition of TGFβ signaling, Nat Comm 2022
+
+## load libraries 
+library(tidyverse)
+library(readxl)
+
+
+
+############################################################################
+############################################################################
+###                                                                      ###
+###                      GSEA RISK ASSESSMENT FILES                      ###
+###                                                                      ###
+############################################################################
+############################################################################
+####### read in risk assessment lists
+risk.assessment <- list()
+risk.assessment$PvsNP <- read_excel("../../tables/gene-lists/Risk assessment_Masa.xlsx", sheet = 1)
+risk.assessment$BRCA1 <- read_excel("../../tables/gene-lists/Risk assessment_Masa.xlsx", sheet = 2)
+risk.assessment$BRCA2 <- read_excel("../../tables/gene-lists/Risk assessment_Masa.xlsx", sheet = 3)
+risk.assessment <- lapply(risk.assessment, function(x){
+  colnames(x) <- x[3,]
+  x <- x[-c(1:3),]
+  return(x)
+})
+
+#p.val.thresh <- 0.05
+q.val.thresh <- 0.1
+risk.assessment$BRCA1 <- risk.assessment$BRCA1[which(as.numeric(risk.assessment$BRCA1$`q-value`) < q.val.thresh),]
+risk.assessment$BRCA2 <- risk.assessment$BRCA2[which(as.numeric(risk.assessment$BRCA2$`q-value`) < q.val.thresh),]
+
+risk.assessment$BRCA1pos <- risk.assessment$BRCA1[which(as.numeric(risk.assessment$BRCA1$PseudoFC) > 0),]
+risk.assessment$BRCA1pos <- risk.assessment$BRCA1pos[order(as.numeric(risk.assessment$BRCA1pos$PseudoFC), decreasing = TRUE),]
+
+risk.assessment$BRCA1neg <- risk.assessment$BRCA1[which(as.numeric(risk.assessment$BRCA1$PseudoFC) <= 0),]
+risk.assessment$BRCA1neg <- risk.assessment$BRCA1neg[order(as.numeric(risk.assessment$BRCA1neg$PseudoFC)),]
+
+risk.assessment$BRCA2pos <- risk.assessment$BRCA2[which(as.numeric(risk.assessment$BRCA2$PseudoFC) > 0),]
+risk.assessment$BRCA2pos <- risk.assessment$BRCA2pos[order(as.numeric(risk.assessment$BRCA2pos$PseudoFC), decreasing = TRUE),]
+
+risk.assessment$BRCA2neg <- risk.assessment$BRCA2[which(as.numeric(risk.assessment$BRCA2$PseudoFC) <= 0),]
+risk.assessment$BRCA2neg <- risk.assessment$BRCA2neg[order(as.numeric(risk.assessment$BRCA2neg$PseudoFC)),]
+
+
+risk.assessment$PvsNPpos <- risk.assessment$PvsNP[which(as.numeric(risk.assessment$PvsNP$PseudoFC) > 0),]
+risk.assessment$PvsNPpos <- risk.assessment$PvsNPpos[order(as.numeric(risk.assessment$PvsNPpos$PseudoFC), decreasing = TRUE),]
+
+risk.assessment$PvsNPneg <- risk.assessment$PvsNP[which(as.numeric(risk.assessment$PvsNP$PseudoFC) <= 0),]
+risk.assessment$PvsNPneg <- risk.assessment$PvsNPneg[order(as.numeric(risk.assessment$PvsNPneg$PseudoFC)),]
+
+
+write.table(file = "../../tables/gene-lists/BRCA1pos.txt", risk.assessment$BRCA1pos, quote = FALSE, sep = "\t")
+write.table(file = "../../tables/gene-lists/BRCA1neg.txt", risk.assessment$BRCA1neg, quote = FALSE, sep = "\t")
+write.table(file = "../../tables/gene-lists/BRCA2pos.txt", risk.assessment$BRCA2pos, quote = FALSE, sep = "\t")
+write.table(file = "../../tables/gene-lists/BRCA2neg.txt", risk.assessment$BRCA2neg, quote = FALSE, sep = "\t")
+write.table(file = "../../tables/gene-lists/PvsNPpos.txt", risk.assessment$PvsNPpos, quote = FALSE, sep = "\t")
+write.table(file = "../../tables/gene-lists/PvsNPneg.txt", risk.assessment$PvsNPneg, quote = FALSE, sep = "\t")
+
+
+
+###########################################################################
+###########################################################################
+###                                                                     ###
+###                            SBC SIGNATURE                            ###
+###                                                                     ###
+###########################################################################
+###########################################################################
+secretory.sd4 <- read.table(file = "../../tables/secretory-sd4.txt", sep = "\t")
+secretory.sd4$gene <- rownames(secretory.sd4)
+secretory.sd4$rank <- c(1:nrow(secretory.sd4))
+
+secretory.aci <- read.table(file = "../../tables/secretory-aci.txt", sep = "\t")
+secretory.aci$gene <- rownames(secretory.aci)
+secretory.aci$rank <- c(1:nrow(secretory.aci))
+
+
+combined <- full_join(secretory.sd4, secretory.aci, by = "gene", suffix = c(".sd", ".aci"))
+combined$avg_strains_log2FC <- (combined$avg_log2FC.aci + combined$avg_log2FC.sd)/2
+
+combined <- as_tibble(combined)

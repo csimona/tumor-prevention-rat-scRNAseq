@@ -1,0 +1,27 @@
+{
+    "id": "6A161388",
+    "path": "~/Dropbox (Partners HealthCare)/Harvard/projects/rat-nelly/github/tumor-prevention-rat-scRNAseq/02_R_single_cell/code/khaled2017-analysis.R",
+    "project_path": "khaled2017-analysis.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1667490872422.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "65,28",
+        "scrollLine": "47"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1667567277,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1667567277282,
+    "read_only": false,
+    "read_only_alternatives": []
+}

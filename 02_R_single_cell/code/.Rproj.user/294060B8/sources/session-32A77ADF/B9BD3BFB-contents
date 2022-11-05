@@ -1,0 +1,26 @@
+## secretory basal signature
+sign <- read.table("../../tables/gene-lists/Positive genes in both strains.txt",sep = "\t", header = TRUE)
+
+rat$sign <- colSums(as.matrix(rat@assays$SCT[match(intersect(sign$gene, rownames(rat@assays$SCT)), rownames(rat@assays$SCT)),]))
+pdf(paste0("../../plots/sd-sorted/umap-SBC-signature.pdf"))
+FeaturePlot(rat, features = c("sign"))
+dev.off()
+
+
+## keratin levels
+keratins <- grep("KRT", rownames(rat), value = TRUE)
+keratins <- setdiff(keratins, c(grep("KRTAP", keratins, value = TRUE), grep("KRTCAP", keratins, value = TRUE)))
+keratins.counts <- colSums(as.matrix(rat@assays$RNA@counts[keratins,]))
+rat$keratins.counts <- keratins.counts
+rat$log.keratins.counts <- log(rat$keratins.counts + 1)
+
+
+pdf("../../plots/sd-sorted/log.keratins.counts.density.all.pdf")
+ggplot(rat@meta.data, aes(x=log.keratins.counts, color=drug)) +
+  geom_density()
+dev.off()
+
+
+
+saveRDS(rat, file = "../../data/rdata/rat-initial-sd.RDS")
+
