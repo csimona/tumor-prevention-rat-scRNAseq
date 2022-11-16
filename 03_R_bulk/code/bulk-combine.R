@@ -1,13 +1,24 @@
+## RNASeq analysis of epithelial bulk samples under different treatment/conditions
+## Author: Simona Cristea
+## Date: October 2022
+## Publication: Breast cancer prevention by short-term inhibition of TGFβ signaling, Nat Comm 2022
+
+
 library(tidyverse)
 library(DESeq2)
 library(lattice)
-#library(rgl)
 
 
 
-####### prepare data and phenotypes
+###########################################################################
+###########################################################################
+###                                                                     ###
+###                     PREPARE DATA AND PHENOTYPES                     ###
+###                                                                     ###
+###########################################################################
+###########################################################################
 # read in data
-filenames <- list.files(path = "../../TGFBRi study/simona-bulk/htseq-count-output/", pattern = "\\.txt$", full.names = TRUE)
+filenames <- list.files(path = "../../data/htseq-count/", pattern = "\\.txt$", full.names = TRUE)
 sample.names <- sapply(filenames, function(x){q <- strsplit(x, ".counts.txt"); return(q[[1]][1])})
 sample.names <- sapply(sample.names, function(x){q <- strsplit(x, "//"); return(q[[1]][2])})
 names(filenames) <- sample.names
@@ -21,12 +32,18 @@ data <- sapply(data, function(x){x[,2]})
 rownames(data) <- toupper(gene.names[[1]])
 
 # read in phenotypes
-phenos <- read.table("../../TGFBRi study/simona-bulk/samples.txt", sep = "\t", header = TRUE)
+phenos <- read.table("../../tables/metadata/samples.bulk.txt", sep = "\t", header = TRUE)
 phenos <- phenos %>% filter(note %in% c("","normal")) %>% select(-note)
 
 
 
-####### separate per experiments and per celltype and pre-filter genes with at least 10 counts across samples
+############################################################################
+############################################################################
+###                                                                      ###
+###         SEPARATE PER EXPERIMENT AND PER CELL TYPE AND FILTER         ###
+###                                                                      ###
+############################################################################
+############################################################################
 ## exp3
 phenos.exp3 <- list()
 data.exp3 <- list()
@@ -62,7 +79,13 @@ names(data.exp7) <- c("Luminal", "CD45")
 
 
 
-####### normalization of all samples with DESeq2
+###########################################################################
+###########################################################################
+###                                                                     ###
+###                  NORMALIZE ALL SAMPLES WITH DESEQ2                  ###
+###                                                                     ###
+###########################################################################
+###########################################################################
 ## exp3 (basal and luminal)
 phenos.all.exp3 <- phenos %>% filter(experiment == "exp3", celltype %in% c("Basal", "Luminal"))
 phenos.all.exp3$merged <- paste(phenos.all.exp3$celltype, phenos.all.exp3$condition, phenos.all.exp3$treatment, sep = ".")
@@ -140,7 +163,13 @@ normalizedCountsTable.all.exp7 <- as.data.frame(counts(dds.all.exp7, normalized 
 
 
 
-####### pca plot of all samples
+###########################################################################
+###########################################################################
+###                                                                     ###
+###                       PCA PLOT OF ALL SAMPLES                       ###
+###                                                                     ###
+###########################################################################
+###########################################################################
 ## exp3
 pca.all.exp3 <- prcomp(t(assay(vsd.all.exp3)))
 importanceIndividual.all.exp3 <- summary(pca.all.exp3)$importance[2,]
@@ -175,16 +204,16 @@ plotPC2PC3 <- xyplot(PC2 ~ PC3, data = pcaDF.all.exp3, pch = 16, cex = 2,  col =
                                 text = list("samples" = c("Basal.parous.C", "Basal.parous.D", "Basal.virgin.C", "Basal.virgin.D",
                                                           "Luminal.parous.C", "Luminal.parous.D","Luminal.virgin.C", "Luminal.virgin.D")), 
                                 columns=2, space = 'top'))
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/plotPC1PC2.pdf", width = 10)
+pdf("../../plots/bulk/exp3/plotPC1PC2.pdf", width = 10)
 try(plotPC1PC2, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/plotPC1PC3.pdf", width = 10)
+pdf("../../plots/bulk/exp3/plotPC1PC3.pdf", width = 10)
 try(plotPC1PC3, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/plotPC2PC3.pdf", width = 10)
+pdf("../../plots/bulk/exp3/plotPC2PC3.pdf", width = 10)
 try(plotPC2PC3, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/PCcomponents.pdf", width = 10)
+pdf("../../plots/bulk/exp3/PCcomponents.pdf", width = 10)
 plot(x, pcaDF.all.exp3$importance1, type="b", pch=18, col="red", xlab="Principal Component", ylab="", ylim=c(0,1))
 lines(x, pcaDF.all.exp3$importance2, type="b", pch=18, col="blue", lty=2)
 legend((length(x)-10), 0.5, legend=c("individual","cumulative"), col=c("red","blue"), lty=1:2, cex=0.8)
@@ -192,11 +221,11 @@ dev.off()
 
 plot3d(pcaDF.all.exp3$`PC1`, pcaDF.all.exp3$`PC2`, pcaDF.all.exp3$`PC3`, col = pcaDF.all.exp3$colors, size = 2, type = 's', xlab = 'PC1', ylab = 'PC2', zlab = 'PC3')
 q <- rglwidget()
-htmlwidgets::saveWidget(q, file = '../../TGFBRi study/simona-bulk/plots/exp3/all_samples_pca_3D.html')
+htmlwidgets::saveWidget(q, file = '../../plots/bulk/exp3/all_samples_pca_3D.html')
 
 text3d(pcaDF.all.exp3$`PC1`, pcaDF.all.exp3$`PC2`, pcaDF.all.exp3$`PC3`, pcaDF.all.exp3$Sample, adj = c(-0.1,-0.8))
 q <- rglwidget()
-htmlwidgets::saveWidget(q, file = '../../TGFBRi study/simona-bulk/plots/exp3/all_samples_pca_3D_with_label.html')
+htmlwidgets::saveWidget(q, file = '../../plots/bulk/exp3/all_samples_pca_3D_with_label.html')
 
 
 ## exp3 basal
@@ -230,16 +259,16 @@ plotPC2PC3 <- xyplot(PC2 ~ PC3, data = pcaDF.basal.exp3, pch = 16, cex = 2,  col
                      key = list(rect = list("col" = c("#F708F7", "#FB84FB", "#F70606", "#FDC1C1")), 
                                 text = list("samples" = c("Basal.parous.C", "Basal.parous.D", "Basal.virgin.C", "Basal.virgin.D")), 
                                 columns=2, space = 'top'))
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/basal-plotPC1PC2.pdf", width = 10)
+pdf("../../plots/bulk/exp3/basal-plotPC1PC2.pdf", width = 10)
 try(plotPC1PC2, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/basal-plotPC1PC3.pdf", width = 10)
+pdf("../../plots/bulk/exp3/basal-plotPC1PC3.pdf", width = 10)
 try(plotPC1PC3, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/basal-plotPC2PC3.pdf", width = 10)
+pdf("../../plots/bulk/exp3/basal-plotPC2PC3.pdf", width = 10)
 try(plotPC2PC3, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/basal-PCcomponents.pdf", width = 10)
+pdf("../../plots/bulk/exp3/basal-PCcomponents.pdf", width = 10)
 plot(x, pcaDF.basal.exp3$importance1, type="b", pch=18, col="red", xlab="Principal Component", ylab="", ylim=c(0,1))
 lines(x, pcaDF.basal.exp3$importance2, type="b", pch=18, col="blue", lty=2)
 legend((length(x)-10), 0.5, legend=c("individual","cumulative"), col=c("red","blue"), lty=1:2, cex=0.8)
@@ -247,11 +276,11 @@ dev.off()
 
 plot3d(pcaDF.basal.exp3$`PC1`, pcaDF.basal.exp3$`PC2`, pcaDF.basal.exp3$`PC3`, col = pcaDF.basal.exp3$colors, size = 2, type = 's', xlab = 'PC1', ylab = 'PC2', zlab = 'PC3')
 q <- rglwidget()
-htmlwidgets::saveWidget(q, file = '../../TGFBRi study/simona-bulk/plots/exp3/basal-all_samples_pca_3D.html')
+htmlwidgets::saveWidget(q, file = '../../plots/bulk/exp3/basal-all_samples_pca_3D.html')
 
 text3d(pcaDF.basal.exp3$`PC1`, pcaDF.basal.exp3$`PC2`, pcaDF.basal.exp3$`PC3`, pcaDF.basal.exp3$Sample, adj = c(-0.1,-0.8))
 q <- rglwidget()
-htmlwidgets::saveWidget(q, file = '../../TGFBRi study/simona-bulk/plots/exp3/basal-all_samples_pca_3D_with_label.html')
+htmlwidgets::saveWidget(q, file = '../../plots/bulk/exp3/basal-all_samples_pca_3D_with_label.html')
 
 
 
@@ -287,16 +316,16 @@ plotPC2PC3 <- xyplot(PC2 ~ PC3, data = pcaDF.luminal.exp3, pch = 16, cex = 2,  c
                                 text = list("samples" = c("Luminal.parous.C", "Luminal.parous.D","Luminal.virgin.C", "Luminal.virgin.D")), 
                                 columns=2, space = 'top'))
 
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/luminal-plotPC1PC2.pdf", width = 10)
+pdf("../../plots/bulk/exp3/luminal-plotPC1PC2.pdf", width = 10)
 try(plotPC1PC2, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/luminal-plotPC1PC3.pdf", width = 10)
+pdf("../../plots/bulk/exp3/luminal-plotPC1PC3.pdf", width = 10)
 try(plotPC1PC3, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/luminal-plotPC2PC3.pdf", width = 10)
+pdf("../../plots/bulk/exp3/luminal-plotPC2PC3.pdf", width = 10)
 try(plotPC2PC3, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp3/luminal-PCcomponents.pdf", width = 10)
+pdf("../../plots/bulk/exp3/luminal-PCcomponents.pdf", width = 10)
 plot(x, pcaDF.luminal.exp3$importance1, type="b", pch=18, col="red", xlab="Principal Component", ylab="", ylim=c(0,1))
 lines(x, pcaDF.luminal.exp3$importance2, type="b", pch=18, col="blue", lty=2)
 legend((length(x)-10), 0.5, legend=c("individual","cumulative"), col=c("red","blue"), lty=1:2, cex=0.8)
@@ -304,15 +333,21 @@ dev.off()
 
 plot3d(pcaDF.luminal.exp3$`PC1`, pcaDF.luminal.exp3$`PC2`, pcaDF.luminal.exp3$`PC3`, col = pcaDF.luminal.exp3$colors, size = 2, type = 's', xlab = 'PC1', ylab = 'PC2', zlab = 'PC3')
 q <- rglwidget()
-htmlwidgets::saveWidget(q, file = '../../TGFBRi study/simona-bulk/plots/exp3/luminal-all_samples_pca_3D.html')
+htmlwidgets::saveWidget(q, file = '../../plots/bulk/exp3/luminal-all_samples_pca_3D.html')
 
 text3d(pcaDF.luminal.exp3$`PC1`, pcaDF.luminal.exp3$`PC2`, pcaDF.luminal.exp3$`PC3`, pcaDF.luminal.exp3$Sample, adj = c(-0.1,-0.8))
 q <- rglwidget()
-htmlwidgets::saveWidget(q, file = '../../TGFBRi study/simona-bulk/plots/exp3/luminal-all_samples_pca_3D_with_label.html')
+htmlwidgets::saveWidget(q, file = '../../plots/bulk/exp3//luminal-all_samples_pca_3D_with_label.html')
 
 
 
-## exp7
+############################################################################
+############################################################################
+###                                                                      ###
+###                                 EXP7                                 ###
+###                                                                      ###
+############################################################################
+############################################################################
 pca.all.exp7 <- prcomp(t(assay(vsd.all.exp7)))
 importanceIndividual.all.exp7 <- summary(pca.all.exp7)$importance[2,]
 importanceCum.all.exp7 <- summary(pca.all.exp7)$importance[3,]
@@ -345,16 +380,16 @@ plotPC2PC3 <- xyplot(PC2 ~ PC3, data = pcaDF.all.exp7, pch = 16, cex = 2,  col =
                                 text = list("samples" = c("Luminal.mE2.C.TF", "Luminal.mE2.D.TF", "Luminal.pE2.C.TB",
                                                           "Luminal.pE2.D.TB", "Luminal.pE2.D.TF")), 
                                 columns=2, space = 'top'))
-pdf("../../TGFBRi study/simona-bulk/plots/exp7/plotPC1PC2.pdf", width = 10)
+pdf("../../plots/bulk/exp7/plotPC1PC2.pdf", width = 10)
 try(plotPC1PC2, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp7/plotPC1PC3.pdf", width = 10)
+pdf("../../plots/bulk/exp7/plotPC1PC3.pdf", width = 10)
 try(plotPC1PC3, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp7/plotPC2PC3.pdf", width = 10)
+pdf("../../plots/bulk/exp7/plotPC2PC3.pdf", width = 10)
 try(plotPC2PC3, silent = TRUE)
 dev.off()
-pdf("../../TGFBRi study/simona-bulk/plots/exp7/PCcomponents.pdf", width = 10)
+pdf("../../plots/bulk/plots/exp7/PCcomponents.pdf", width = 10)
 plot(x, pcaDF.all.exp7$importance1, type="b", pch=18, col="red", xlab="Principal Component", ylab="", ylim=c(0,1))
 lines(x, pcaDF.all.exp7$importance2, type="b", pch=18, col="blue", lty=2)
 legend((length(x)-10), 0.5, legend=c("individual","cumulative"), col=c("red","blue"), lty=1:2, cex=0.8)
@@ -363,17 +398,23 @@ dev.off()
 
 plot3d(pcaDF.all.exp7$`PC1`, pcaDF.all.exp7$`PC2`, pcaDF.all.exp7$`PC3`, col = pcaDF.all.exp7$colors, size = 2, type = 's', xlab = 'PC1', ylab = 'PC2', zlab = 'PC3')
 q <- rglwidget()
-htmlwidgets::saveWidget(q, file = '../../TGFBRi study/simona-bulk/plots/exp7/all_samples_pca_3D.html')
+htmlwidgets::saveWidget(q, file = '../../plots/bulk/exp7/all_samples_pca_3D.html')
 
 text3d(pcaDF.all.exp7$`PC1`, pcaDF.all.exp7$`PC2`, pcaDF.all.exp7$`PC3`, pcaDF.all.exp7$Sample, adj = c(-0.1,-0.8))
 q <- rglwidget()
-htmlwidgets::saveWidget(q, file = '../../TGFBRi study/simona-bulk/plots/exp7/all_samples_pca_3D_with_label.html')
+htmlwidgets::saveWidget(q, file = '../../plots/bulk/exp7/all_samples_pca_3D_with_label.html')
 
 
 
 
 
-####### run DESeq2 and extract comparisons
+############################################################################
+############################################################################
+###                                                                      ###
+###                            DO COMPARISONS                            ###
+###                                                                      ###
+############################################################################
+############################################################################
 dds.exp3 <- list()
 res.virginD.vs.virginC <- list()
 res.parousD.vs.parousC <- list()
@@ -458,7 +499,7 @@ list.to.plot <- filter.res.parousD.vs.parousC
 name.file <- paste0(strsplit(deparse(substitute(filter.res.parousD.vs.parousC)),split = ".", fixed = TRUE)[[1]][3:5], collapse = ".")
 for (i in 1:length(list.to.plot)){
   n <- names(list.to.plot)[i]
-  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("~/Downloads/exp3/",n,".", name.file, ".txt"))
+  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("../../tables/bulk-DEGs/exp3/",n,".", name.file, ".txt"))
 }
 
 
@@ -475,7 +516,7 @@ list.to.plot <- filter.res.shrink.virginD.vs.virginC
 name.file <- paste0(strsplit(deparse(substitute(filter.res.shrink.virginD.vs.virginC)),split = ".", fixed = TRUE)[[1]][3:6], collapse = ".")
 for (i in 1:length(list.to.plot)){
   n <- names(list.to.plot)[i]
-  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("~/Downloads/exp3/",n,".", name.file, ".txt"))
+  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("../../tables/bulk-DEGs/exp3/",n,".", name.file, ".txt"))
 }
 
 
@@ -493,7 +534,7 @@ list.to.plot <- filter.res.shrink.parousD.vs.parousC
 name.file <- paste0(strsplit(deparse(substitute(filter.res.shrink.parousD.vs.parousC)),split = ".", fixed = TRUE)[[1]][3:6], collapse = ".")
 for (i in 1:length(list.to.plot)){
   n <- names(list.to.plot)[i]
-  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("~/Downloads/exp3/",n,".", name.file, ".txt"))
+  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("../../tables/bulk-DEGs/exp3/",n,".", name.file, ".txt"))
 }
 
 
@@ -512,7 +553,7 @@ list.to.plot <- filter.res.mE2DTF.vs.mE2CTF
 name.file <- paste0(strsplit(deparse(substitute(filter.res.mE2DTF.vs.mE2CTF)),split = ".", fixed = TRUE)[[1]][3:5], collapse = ".")
 for (i in 1:length(list.to.plot)){
   n <- names(list.to.plot)[i]
-  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("~/Downloads/exp7/",n,".", name.file, ".txt"))
+  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("../../tables/bulk-DEGs/exp7/", n,".", name.file, ".txt"))
 }
 
 
@@ -529,7 +570,7 @@ list.to.plot <- filter.res.pE2DTB.vs.pE2CTB
 name.file <- paste0(strsplit(deparse(substitute(filter.res.pE2DTB.vs.pE2CTB)),split = ".", fixed = TRUE)[[1]][3:5], collapse = ".")
 for (i in 1:length(list.to.plot)){
   n <- names(list.to.plot)[i]
-  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("~/Downloads/exp7/",n,".", name.file, ".txt"))
+  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("../../tables/bulk-DEGs/exp7/",n,".", name.file, ".txt"))
 }
 
 
@@ -546,7 +587,7 @@ list.to.plot <- filter.res.pE2DTF.vs.pE2CTB
 name.file <- paste0(strsplit(deparse(substitute(filter.res.pE2DTF.vs.pE2CTB)),split = ".", fixed = TRUE)[[1]][3:5], collapse = ".")
 for (i in 1:length(list.to.plot)){
   n <- names(list.to.plot)[i]
-  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("~/Downloads/exp7/",n,".", name.file, ".txt"))
+  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("../../tables/bulk-DEGs/exp7/",n,".", name.file, ".txt"))
 }
 
 
@@ -563,21 +604,5 @@ list.to.plot <- filter.res.pE2DTB.vs.pE2DTF
 name.file <- paste0(strsplit(deparse(substitute(filter.res.pE2DTB.vs.pE2DTF)),split = ".", fixed = TRUE)[[1]][3:5], collapse = ".")
 for (i in 1:length(list.to.plot)){
   n <- names(list.to.plot)[i]
-  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("~/Downloads/exp7/",n,".", name.file, ".txt"))
+  write.table(list.to.plot[[i]], sep = "\t", quote = FALSE, file = paste0("../../tables/bulk-DEGs/exp7/",n,".", name.file, ".txt"))
 }
-
-
-
-# ####### full design, to do with contrasts
-# dds.exp3.1 <- DESeqDataSetFromMatrix(countData = data3,
-#                                      colData = phenos.exp3,
-#                                      design= ~ celltype + treatment + condition + celltype * treatment + celltype * condition + treatment * condition + celltype*treatment*condition)
-# dds.exp3.1 <- DESeq(dds.exp3.1)
-# comp.names.1 <- resultsNames(dds.exp3.1)
-# comp.names.1 <- comp.names.1[-match("Intercept", comp.names.1)]
-# 
-# res.1 <- list()
-# for (i in 1:length(comp.names.1)){
-#   res.1[[i]] <- results(dds.exp3.1, name = comp.names.1[i])
-#   names(res.1)[i] <- comp.names.1[i]
-# }
