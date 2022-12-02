@@ -16,7 +16,7 @@ Cancer prevention has a profound impact on cancer-associated mortality and morbi
 
 Content
 -------
-* `/01_cellranger/`: cellranger quality control html files on the three datasets: sorted ACI epithelial cells, sorted SD epithelial cells, whole mammary gland SD cells. 
+* `/01_cellranger/`: cellranger quality control html files on samples from the three single cell datasets: sorted ACI epithelial cells, sorted SD epithelial cells, whole mammary gland SD cells. 
 * `/02_R_single_cell/`: R scripts to reproduce single cell analyses.
 * `/03_R_bulk/`: R scripts to reproduce bulk RNASeq analyses.
 * `/data/`: preprocessed bulk outputs, cellranger count outputs and htseq count outputs.
@@ -26,9 +26,9 @@ Content
 
 Data
 -------
-The raw scRNAseq and bulk RNASeq data is accessible at [GEO GSEA]().
+The RNA-seq and scRNA-seq data generated in this study have been deposited in the NCBI GEO database under accession number [GSE184095](https://0-www-ncbi-nlm-nih-gov.brum.beds.ac.uk/geo/query/acc.cgi?acc=GSE184095)
 
-Preprocessed RDS objects can be downloaded from the following [zenodo link](https://zenodo.org/record/7293642#.Y4krEi-B19f):
+Preprocessed RDS objects can be downloaded from [zenodo](https://zenodo.org/record/7293642#.Y4krEi-B19f):
 
 HTSeq counts inputs from the bulk RNASeq analysis can be downloaded from `data\`.
 
