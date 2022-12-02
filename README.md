@@ -26,12 +26,12 @@ Content
 
 Data
 -------
-The RNA-seq and scRNA-seq data generated in this study have been deposited in the NCBI GEO database under accession number [GSE184095](https://0-www-ncbi-nlm-nih-gov.brum.beds.ac.uk/geo/query/acc.cgi?acc=GSE184095)
+The RNA-seq and scRNA-seq data generated in this study have been deposited in the NCBI GEO database under accession number [GSE184095](https://0-www-ncbi-nlm-nih-gov.brum.beds.ac.uk/geo/query/acc.cgi?acc=GSE184095).
 
-Preprocessed RDS objects can be downloaded from [zenodo](https://zenodo.org/record/7293642#.Y4krEi-B19f):
+Preprocessed RDS objects can be downloaded from [zenodo](https://zenodo.org/record/7293642#.Y4krEi-B19f)
 
-HTSeq counts inputs from the bulk RNASeq analysis can be downloaded from `data\`.
+HTSeq counts inputs from the bulk RNASeq analysis can be downloaded from `/data/`.
 
 
 ## Contact
-For any questions, comments or suggestions, please feel free out to me via GitHub, Twitter or email (scristea@jimmy.harvard.edu).
+For any questions, comments or suggestions, please feel to reach out to me via GitHub, Twitter or email (scristea@jimmy.harvard.edu).
