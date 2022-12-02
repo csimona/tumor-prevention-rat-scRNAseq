@@ -16,9 +16,9 @@ Cancer prevention has a profound impact on cancer-associated mortality and morbi
 
 Content
 -------
-* `/01_cellranger/`: cellranger quality control plots on the three datasets: sorted ACI epithelial cells, sorted SD epithelial cells, whole mammary gland SD cells. 
-* `/02_R_single_cell/`: R scripts to reproduce the single cell analyses.
-* `/03_R_bulk/`: R scripts to reproduce the bulk RNASeq analyses.
+* `/01_cellranger/`: cellranger quality control html files on the three datasets: sorted ACI epithelial cells, sorted SD epithelial cells, whole mammary gland SD cells. 
+* `/02_R_single_cell/`: R scripts to reproduce single cell analyses.
+* `/03_R_bulk/`: R scripts to reproduce bulk RNASeq analyses.
 * `/data/`: preprocessed bulk outputs, cellranger count outputs and htseq count outputs.
 * `/plots/`: output plots from the single cell and bulk analyses, organized by folder.
 * `/tables/`: number of cells per cluster, relevant gene lists used throughout the analysis, differentially expressed genes from bulk analyses, and sample metadata.
