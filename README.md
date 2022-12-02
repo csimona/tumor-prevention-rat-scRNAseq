@@ -1,6 +1,6 @@
-[![DOI](https://zenodo.org/badge/7293642.svg)](https://zenodo.org/badge/DOI/10.5281/zenodo.7293642.svg)
+[![DOI](https://zenodo.org/badge/554416904.svg)](https://zenodo.org/record/7293642#.Y4lh0i-B2NH)
 
-Breast cancer prevention by short-term inhibition of TGFB signaling
+#Breast cancer prevention by short-term inhibition of TGFB signaling
 
 This repository contains code and plots to support genomic analyses and reproduce results from the paper [Breast cancer prevention by short-term inhibition of TGFB signaling](https://).
 
