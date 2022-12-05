@@ -10,7 +10,7 @@ Cancer prevention has a profound impact on cancer-associated mortality and morbi
 
 
 <p align="center"> 
-<img src="overview_github.png" width="900" height="400"/>
+<img src="overview-github.png" width="900" height="400"/>
 </p>
 
 
@@ -34,4 +34,4 @@ HTSeq counts inputs from the bulk RNASeq analysis can be downloaded from `/data/
 
 
 ## Contact
-For any questions, comments or suggestions, please feel to reach out to me via GitHub, Twitter or email (scristea@jimmy.harvard.edu).
+For any questions, comments or suggestions regarding the code or the manuscript, please feel to reach out to me via GitHub, Twitter or email (scristea@jimmy.harvard.edu).
