@@ -1,7 +1,7 @@
 Breast cancer prevention by short-term inhibition of TGFB signaling
 --------
 
-This repository contains code and plots to support genomic analyses and reproduce results from the paper [Breast cancer prevention by short-term inhibition of TGFB signaling](https://), , published in Nature Communications in December 2022.
+This repository contains code, data, tables and plots to support genomic analyses and reproduce results from the paper [Breast cancer prevention by short-term inhibition of TGFB signaling](https://), published in Nature Communications in December 2022.
 
 
 Abstract
