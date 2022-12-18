@@ -34,7 +34,7 @@ HTSeq counts inputs from the bulk RNASeq analysis can be downloaded from `/data/
 
 
 ## Tweetorial
-[Twitter thread](https://twitter.com/simocristea/status/1600578512578035733?s=20&t=6BMj6FQPDUlc2CtfIFQmLw) explaining the main findings of the paper.
+[Twitter thread](https://twitter.com/simocristea/status/1600578512578035733?s=20&t=6BMj6FQPDUlc2CtfIFQmLw) presenting the main findings of the paper.
 
 
 
