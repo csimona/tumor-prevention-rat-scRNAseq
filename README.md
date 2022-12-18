@@ -1,7 +1,7 @@
 Breast cancer prevention by short-term inhibition of TGFB signaling
 --------
 
-This repository contains code, data, tables and plots to support genomic analyses and reproduce results from the paper [Breast cancer prevention by short-term inhibition of TGFB signaling](https://), published in Nature Communications in December 2022.
+This repository contains code, data, tables and plots to support genomic analyses and reproduce results from the paper [Breast cancer prevention by short-term inhibition of TGFB signaling](https://www.nature.com/articles/s41467-022-35043-5), published in Nature Communications in December 2022.
 
 
 Abstract
@@ -31,6 +31,11 @@ The RNA-seq and scRNA-seq data generated in this study have been deposited in th
 Preprocessed RDS objects can be downloaded from [zenodo](https://zenodo.org/record/7293642#.Y4krEi-B19f).
 
 HTSeq counts inputs from the bulk RNASeq analysis can be downloaded from `/data/`.
+
+
+## Tweetorial
+[Twitter thread] (https://twitter.com/simocristea/status/1600578512578035733?s=20&t=6BMj6FQPDUlc2CtfIFQmLw) explaining the main findings of the paper.
+
 
 
 ## Contact
